@@ -37,6 +37,9 @@ class Connect4Game:
                 if self.check_win(self.current_player):
                     self.game_over = True
                     self.winner = player_username
+                elif self.is_board_full():
+                    self.game_over = True
+                    self.winner = "No_one" # Tie condition, no winner, used to be none but none is used for other things so No_one it is
                 else:
                     # Switch players
                     self.current_player = (self.current_player + 1) % 2
@@ -75,7 +78,13 @@ class Connect4Game:
                     return True
 
         return False
-
+    def is_board_full(self):
+        """Check if the board is full (tie condition)"""
+        for col in range(self.COLUMNS):
+            if self.grid[self.ROWS-1][col] is None:
+                return False
+        return True
+    
     def get_game_state(self):
         """Return the current game state"""
         return {
@@ -479,7 +488,7 @@ class ChatServer:
                 pass
 
 if __name__ == "__main__":
-    server = ChatServer("127.0.0.1", 12345)
+    server = ChatServer("0.0.0.0", 12345)
     try:
         while True:
             pass

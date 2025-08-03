@@ -24,6 +24,7 @@ class Connect4GameUI:
         self.game_over = False
         self.winner = None
         self.my_player_id = None
+        self.end_game = False
         
         # Initialize pygame
         pygame.init()
@@ -85,8 +86,9 @@ class Connect4GameUI:
         while self.running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    self.send_game_quit_message()
-                    self.running = False
+                    if self.end_game==False:
+                        self.send_game_quit_message()
+                        self.running = False
                     pygame.quit()
                     return
                 elif event.type == pygame.KEYUP and self.my_turn and not self.game_over:
@@ -121,6 +123,9 @@ class Connect4GameUI:
             if self.my_turn:
                 text = f"Your turn - {self.get_player_name(self.my_player_id)}"
                 color = (0, 150, 0)
+            elif self.winner =="No_one":
+                text = "IT IS A DRAW LOL! Now please leave the game."
+                color = (150, 0, 150)
             else:
                 other_player = self.players[1 - self.my_player_id] if self.my_player_id is not None else "Other Player"
                 text = f"{other_player}'s turn - {self.get_player_name(self.current_player_id)}"
@@ -132,6 +137,9 @@ class Connect4GameUI:
             else:
                 text = f"{self.winner} won! Now please leave the game."
                 color = (150, 0, 0)
+            
+            self.end_game = True
+                
         
         text_surface = self.font.render(text, True, color)
         self.screen.blit(text_surface, (20, 10))
@@ -491,7 +499,10 @@ class New_game_room(QMainWindow):
 
     def handle_game_over(self, winner, game_state):
         """Handle game over from server"""
-        self.text_edit.append(f"Game Over! Winner: {winner}")
+        if winner == "No_one":
+            self.text_edit.append("Game Over! IT IS A DRAW LOL!")
+        else:
+            self.text_edit.append(f"Game Over! Winner: {winner}")
         self.ready_button.setEnabled(True)
         
         #New sending message here to reshow the ready after game over
