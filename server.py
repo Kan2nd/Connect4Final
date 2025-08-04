@@ -163,14 +163,9 @@ class ChatServer:
                     }
                     self.send_message(client_socket, response)
                     self.broadcast_room_state()
-
-                elif message["Command"] == "Request_Room_State":
-                    self.send_message(client_socket, {
-                        "Command": "Room_State",
-                        "Available_Rooms": list(self.rooms.keys()),
-                        "Users_In_Room": self.rooms.get(message.get("Room_Name", ""), [])
-                    })
                     
+               
+                
                 elif message["Command"] == "Create_Room":
                     room_name = message["Room_Name"]
                     username = message["User_Name"]

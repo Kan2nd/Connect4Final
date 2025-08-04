@@ -123,9 +123,7 @@ class Connect4GameUI:
             if self.my_turn:
                 text = f"Your turn - {self.get_player_name(self.my_player_id)}"
                 color = (0, 150, 0)
-            elif self.winner =="No_one":
-                text = "IT IS A DRAW LOL! Now please leave the game."
-                color = (150, 0, 150)
+            
             else:
                 other_player = self.players[1 - self.my_player_id] if self.my_player_id is not None else "Other Player"
                 text = f"{other_player}'s turn - {self.get_player_name(self.current_player_id)}"
@@ -134,9 +132,13 @@ class Connect4GameUI:
             if self.winner == self.parent.current_user:
                 text = "You won! Now please leave the game."
                 color = (0, 150, 0)
+            elif self.winner == "No_one":
+                text = "IT IS A DRAW LOL! Now please leave the game."
+                color = (150, 0, 150)
             else:
                 text = f"{self.winner} won! Now please leave the game."
                 color = (150, 0, 0)
+                
             
             self.end_game = True
                 
@@ -974,11 +976,7 @@ class ClientMenu(QMainWindow):
                 self.join_room_button.setEnabled(True)
                 self.create_room_button.setEnabled(True)
                 self.room_input.setEnabled(True)
-                self.send_message({
-                    "Command": "Request_Room_State",
-                    "User_Name": self.username,
-                    "Users_In_Room": self.list_of_users_in_room
-                })
+                
             elif message["Command"] == "Room_State":
                 new_rooms = set(message["Available_Rooms"])
                 old_rooms = set(self.list_of_available_rooms)
